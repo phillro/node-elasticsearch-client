@@ -12,8 +12,8 @@ npm install elasticsearchclient
 ElasticSearchClient = require('elasticSearchClient');
 
 var serverOptions = {
-    host: 'search2.skyfetch.com',
-    port: 9201,
+    host: 'localhost',
+    port: 9200,
 };
 
 var elasticSearchClient = new ElasticSearchClient(serverOptions);

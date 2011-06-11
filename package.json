@@ -1,15 +1,20 @@
 {
-  "author": "Phillip Rosen <phill.rosen@gmail.com>",
-  "name": "elasticsearchclient",
-  "description": "A client for Elastic Search",
-  "version": "0.0.2",
-  "repository": {
-    "url": ""
-  },
-  "main": "./index.js",
-  "engines": {
-    "node": ">= 0.3.0"
-  },
-  "dependencies": {},
-  "devDependencies": {}
+    "author": "Phillip Rosen <phill.rosen@gmail.com>",
+    "name": "elasticsearchclient",
+    "description": "A client for Elastic Search",
+    "version": "0.0.3",
+    "repository": {
+        "url": ""
+    },
+    "main": "./index.js",
+    "engines": {
+        "node": ">= 0.3.0"
+    },
+    "dependencies": {},
+    "devDependencies": {},
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/phillro/node-elasticsearch-client.git"
+    }
 }
+
