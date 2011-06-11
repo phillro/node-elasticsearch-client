@@ -1,0 +1,68 @@
+Elastic Search Client
+=====================
+
+A client for http://www.elasticsearch.com
+
+## Installation
+
+npm install elasticsearchclient
+
+
+## Executing commands on elasticsearch
+ElasticSearchClient = require('elasticSearchClient');
+
+var serverOptions = {
+    host: 'search2.skyfetch.com',
+    port: 9201,
+};
+
+var elasticSearchClient = new ElasticSearchClient(serverOptions);
+
+var qryObj = {
+    field : term
+}
+
+elasticSearchClient.search('my_index_name', 'my_type_name', qryObj)
+            .on('data', function(data) {
+                console.log(JSON.parse(data))
+            })
+            .on('done', function(){
+                //always returns 0 right now
+            })
+            .on('error', function(error){
+                console.log(error)
+            })
+            .exec()
+
+elasticSearchClient.index('my_index_name', 'my_type_name', {'name':'name', id:"1111"})
+            .on('data', function(data) {
+                console.log(data)
+            })
+            .exec()
+
+## What can i do?
+
+Most of the API (http://www.elasticsearch.org/guide/reference/api/) is implemented. Bulk indexing has nothing yet.
+
+## License
+
+Copyright (c) 2011 Phillip Rosen
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
