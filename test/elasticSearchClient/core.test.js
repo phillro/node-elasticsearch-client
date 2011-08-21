@@ -1,5 +1,6 @@
 assert = require('assert');
 ElasticSearchClient = require('../../lib/elasticsearchclient/elasticSearchClient.js');
+var hashlib = require('hashlib')
 var serverOptions = {
     host: 'localhost',
     port: 9200,
@@ -10,62 +11,51 @@ var serverOptions = {
      }*/
 };
 
-//Delay before executing requests. Necessary to avoid race.
-var requestDelay = 5000
-var indexName = 'testindex3';
-var objName = 'tweet'
+var indexName = 'your_index_name';
+var objName = 'your_object_name'
 
 var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
 
 testIndex = function() {
     elasticSearchClient.index(indexName, objName, {'name':'name', id:"1111"})
-            .on('data', function(data) {
-                console.log(data)
-                assert.ok(JSON.parse(data), 'textIndex failed. ');
+        .on('data', function(data) {
+            console.log(data)
+            assert.ok(JSON.parse(data), 'textIndex failed. ');
 
-            })
-            .exec()
+        })
+        .exec()
 }
 
 
 testDelete = function() {
     elasticSearchClient.deleteDocument(indexName, objName, 1111)
-            .on('data',
-            function(data) {
-                console.log(data)
-            }).exec();
+        .on('data',
+        function(data) {
+            console.log(data)
+        }).exec();
 }
 
 testGet = function() {
     elasticSearchClient.get(indexName, objName, 1111)
-            .on('data', function(data) {
-                assert.ok(JSON.parse(data)._source, "testGet failed.")
-            })
-            .exec()
+        .on('data', function(data) {
+            assert.ok(JSON.parse(data)._source, "testGet failed.")
+        })
+        .exec()
 }
 
 testSearch = function() {
     var qryObj = {
-        query: {
-            bool: {
-                should: [
-                    {flt : {
-                        fields : ["name"],
-                        like_text : 'a name'
-                    }
-                    }
-                ]
-            }
+        "query" : {
+            "term" : { "name" : "sushi" }
         }
     };
     elasticSearchClient.search(indexName, objName, qryObj)
-            .on('data', function(data) {
-                assert.ok(JSON.parse(data), "testSearch failed.")
-            })
-            .exec()
-
-
+        .on('data', function(data) {
+            console.log(data)
+            assert.ok(JSON.parse(data), "testSearch failed.")
+        })
+        .exec()
 }
 
 testPercolate = function() {
@@ -76,11 +66,11 @@ testPercolate = function() {
     }
 
     elasticSearchClient.percolate(indexName, objName, doc)
-            .on('data',
-            function(data) {
-                assert.ok(JSON.parse(data), "testPercolate failed.")
-            })
-            .exec()
+        .on('data',
+        function(data) {
+            assert.ok(JSON.parse(data), "testPercolate failed.")
+        })
+        .exec()
 }
 
 testPercolator = function() {
@@ -98,11 +88,11 @@ testPercolator = function() {
         }
     };
     elasticSearchClient.percolator(indexName, objName, qryObj)
-            .on('data',
-            function(data) {
-                assert.ok(JSON.parse(data), "testPercolator failed.")
-            })
-            .exec()
+        .on('data',
+        function(data) {
+            assert.ok(JSON.parse(data), "testPercolator failed.")
+        })
+        .exec()
 }
 
 testBulk = function() {
@@ -112,12 +102,12 @@ testBulk = function() {
 testCount = function() {
     var qryStr = 'name:name'
     elasticSearchClient.count(indexName, objName, qryStr)
-            .on('data',
-            function(data) {
-                console.log(data);
-                assert.ok(JSON.parse(data), "testCount failed.")
-            })
-            .exec()
+        .on('data',
+        function(data) {
+            console.log(data);
+            assert.ok(JSON.parse(data), "testCount failed.")
+        })
+        .exec()
 }
 
 testDeleteByQuery = function() {
@@ -127,38 +117,61 @@ testDeleteByQuery = function() {
         }
     }
     elasticSearchClient.deleteByQuery(indexName, objName, qryObj)
-            .on('data', function(data) {
-                assert.ok(JSON.parse(data), "testDeleteByQuery failed.")
-            })
-            .exec()
+        .on('data', function(data) {
+            assert.ok(JSON.parse(data), "testDeleteByQuery failed.")
+        })
+        .exec()
 }
 
 testMoreLikeThis = function() {
-    var qryObj = {
-        query: {
-            bool: {
-                should: [
-                    {flt : {
-                        fields : ["name"],
-                        like_text : 'a name'
-                    }
-                    }
-                ]
-            }
-        }
-    };
-    elasticSearchClient.moreLikeThis(indexName, objName, '1111', qryObj)
-            .on('data', function(data) {
-                assert.ok(JSON.parse(data), "testMoreLikeThis failed.")
-            })
-            .exec()
+    
+    elasticSearchClient.moreLikeThis(indexName, objName, '4d714f52dd6a90842168b3d1',{})
+        .on('data', function(data) {
+            console.log(data);
+            assert.ok(JSON.parse(data), "testMoreLikeThis failed.")
+        })
+        .exec()
 }
 
-testIndex();
+//testIndex();
 //testGet();
 //testDelete();
-//testSearch();
-//testMoreLikeThis();
-//testDeleteByQuery()
+/*
+var terms = ['sushi', 'vodka','pizza','korean','broadway']
+for (i = 0; i < 1; i++) {
+    testConsistency(terms[i % terms.length]);
+}
+
+
+function testConsistency(term) {
+    var inst = this
+    inst.term = term
+    var qryObj = {
+        "query" : {
+            "term" : { "name" : inst.term }
+        },
+        "facets" : {
+            "categories" : { "terms" : {"field" : "categories"} }
+        }
+    };
+    elasticSearchClient.search(indexName, qryObj)
+        .on('data', function(data, params) {
+            var obj = JSON.parse(data)
+            try {
+                // console.log(params+' : '+obj.hits.hits[0]._source.name)
+                console.log(obj.facets.categories)
+                console.log(obj.hits.hits[0])
+            } catch(ex) {
+                console.log(data)
+                throw ex;
+            }
+
+        })
+        .exec()
+}*/
+
+
 testMoreLikeThis();
-testCount()
+//testDeleteByQuery()
+//testMoreLikeThis();
+//testCount()

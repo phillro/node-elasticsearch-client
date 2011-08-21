@@ -10,6 +10,9 @@ var serverOptions = {
      }*/
 };
 
+
+
+
 var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
 

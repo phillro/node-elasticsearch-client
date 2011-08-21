@@ -1,5 +1,6 @@
 assert = require('assert');
 ElasticSearchClient = require('../../lib/elasticsearchclient/elasticSearchClient.js');
+var hashlib = require('hashlib')
 var serverOptions = {
     host: 'localhost',
     port: 9200,
@@ -10,8 +11,9 @@ var serverOptions = {
      }*/
 };
 
-var indexName = 'testindex3';
-var objName = 'tweet'
+
+var indexName = 'your_index_name';
+var objName = 'your_object_name'
 
 var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
@@ -51,7 +53,8 @@ testAnalyze = function() {
 testCreateIndex = function() {
     elasticSearchClient.createIndex(indexName)
             .on('data', function(data) {
-                assert.ok(JSON.parse(data))
+            console.log(data);
+                //assert.ok(JSON.parse(data))
             })
             .exec()
 }
@@ -109,6 +112,7 @@ testUpdateSettings = function() {
 testGetMapping = function() {
     elasticSearchClient.getMapping(indexName, objName)
             .on('data', function(data) {
+            console.log(data);
                 assert.ok(JSON.parse(data), 'testGetMapping failed')
             })
             .exec()
@@ -217,15 +221,15 @@ testStatus = function() {
 testClearCache = function() {
     elasticSearchClient.clearCache(indexName)
             .on('data', function(data) {
-                console.log(data)
                 assert.ok(JSON.parse(data), 'testClearCache failed')
             })
             .exec()
 }
 
+testGetMapping();
+
 testCreateIndex()
 testPutMapping();
-testGetMapping();
 testDeleteMapping();
 testRefresh();
 testOptimize();

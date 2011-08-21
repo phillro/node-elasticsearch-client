@@ -2,7 +2,7 @@
     "author": "Phillip Rosen <phill.rosen@gmail.com>",
     "name": "elasticsearchclient",
     "description": "A client for Elastic Search",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "repository": {
         "url": ""
     },
@@ -17,4 +17,3 @@
         "url": "git://github.com/phillro/node-elasticsearch-client.git"
     }
 }
-
