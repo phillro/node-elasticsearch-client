@@ -16,6 +16,16 @@ var serverOptions = {
     port: 9200,
 };
 
+OR specify multiple hosts
+
+var serverOptions = {
+    hosts:[
+        {
+            host: 'localhost',
+            port: 9200
+        }]
+};
+
 var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
 var qryObj = {
