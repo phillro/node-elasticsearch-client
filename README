@@ -9,7 +9,7 @@ npm install elasticsearchclient
 
 
 ## Executing commands on elasticsearch
-ElasticSearchClient = require('elasticSearchClient');
+ElasticSearchClient = require('elasticsearchclient');
 
 var serverOptions = {
     host: 'localhost',
