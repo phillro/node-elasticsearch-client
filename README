@@ -1,7 +1,7 @@
 Elastic Search Client
 =====================
 
-A client for http://www.elasticsearch.com
+A node.js client for elasticsearch (http://www.elasticsearch.com). 
 
 ## Installation
 
