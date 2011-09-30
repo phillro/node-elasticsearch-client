@@ -52,7 +52,7 @@ elasticSearchClient.index('my_index_name', 'my_type_name', {'name':'name', id:"1
 
 ## What can i do?
 
-Most of the API (http://www.elasticsearch.org/guide/reference/api/) is implemented. Bulk indexing has nothing yet.
+Most of the API (http://www.elasticsearch.org/guide/reference/api/) is implemented. 
 
 ## License
 
