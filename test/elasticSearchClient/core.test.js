@@ -3,7 +3,7 @@ ElasticSearchClient = require('../../lib/elasticsearchclient/elasticSearchClient
 var hashlib = require('hashlib')
 var serverOptions = {
     host: 'localhost',
-    port: 9200,
+    port: 9200
     //secure: true,
     /*auth: {
      username:'username',
@@ -133,45 +133,12 @@ testMoreLikeThis = function() {
         .exec()
 }
 
-//testIndex();
-//testGet();
-//testDelete();
-/*
-var terms = ['sushi', 'vodka','pizza','korean','broadway']
-for (i = 0; i < 1; i++) {
-    testConsistency(terms[i % terms.length]);
-}
-
-
-function testConsistency(term) {
-    var inst = this
-    inst.term = term
-    var qryObj = {
-        "query" : {
-            "term" : { "name" : inst.term }
-        },
-        "facets" : {
-            "categories" : { "terms" : {"field" : "categories"} }
-        }
-    };
-    elasticSearchClient.search(indexName, qryObj)
-        .on('data', function(data, params) {
-            var obj = JSON.parse(data)
-            try {
-                // console.log(params+' : '+obj.hits.hits[0]._source.name)
-                console.log(obj.facets.categories)
-                console.log(obj.hits.hits[0])
-            } catch(ex) {
-                console.log(data)
-                throw ex;
-            }
-
-        })
-        .exec()
-}*/
+testIndex();
+testGet();
+testDelete();
 
 
 testMoreLikeThis();
-//testDeleteByQuery()
-//testMoreLikeThis();
-//testCount()
+testDeleteByQuery()
+testMoreLikeThis();
+testCount()

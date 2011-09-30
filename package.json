@@ -1,8 +1,8 @@
 {
     "author": "Phillip Rosen <phill.rosen@gmail.com>",
-    "name": "elasticsearchclient",
+    "name": "elastiseahclient",
     "description": "A client for Elastic Search",
-    "version": "0.0.8",
+    "version": "0.1.4",
     "repository": {
         "url": ""
     },
