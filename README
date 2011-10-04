@@ -50,6 +50,21 @@ elasticSearchClient.index('my_index_name', 'my_type_name', {'name':'name', id:"1
             })
             .exec()
 
+//Bulk index example
+var commands = []
+commands.push({ "index" : { "_index" :'my_index_name', "_type" : "my_type_name"} })
+commands.push({field1:'value',field2:'value'})
+
+
+    elasticSearchClient.bulk(commands, {})
+            .on('data', function(data) {})
+            .on('done', function(done){})
+            .on('error', function(error){})
+            .exec();
+
+
+
+
 ## What can i do?
 
 Most of the API (http://www.elasticsearch.org/guide/reference/api/) is implemented. 
