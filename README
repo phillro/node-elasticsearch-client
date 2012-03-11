@@ -63,7 +63,7 @@ commands.push({field1:'value',field2:'value'})
             .exec();
 
 Twitter stream:
-
+Seems to be a problem in the es with deleting streams. May require a node restart for modifications/deletes to take effect
     elasticSearchClient.createOrModifyTwitterRiver(riverName, riverData)
         .on('data', function (data) {
             console.log(data)
