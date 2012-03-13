@@ -50,7 +50,7 @@ var testCreatewitterRiver = function () {
 
 
 testDeleteTwitterRiver()
-//testCreatewitterRiver()
+testCreatewitterRiver()
 
 
 
