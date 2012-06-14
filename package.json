@@ -2,7 +2,7 @@
     "author": "Phillip Rosen <phill.rosen@gmail.com>",
     "name": "elasticsearchclient",
     "description": "A client for Elastic Search",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "repository": {
         "url": ""
     },
