@@ -9,15 +9,19 @@ npm install elasticsearchclient
 
 
 ## Executing commands on elasticsearch
+
+```javascript
 ElasticSearchClient = require('elasticsearchclient');
 
 var serverOptions = {
     host: 'localhost',
     port: 9200,
 };
+```
 
 OR specify multiple hosts
 
+```javascript
 var serverOptions = {
     hosts:[
         {
@@ -25,7 +29,9 @@ var serverOptions = {
             port: 9200
         }]
 };
+```
 
+```javascript
 var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
 var qryObj = {
@@ -62,8 +68,13 @@ commands.push({field1:'value',field2:'value'})
             .on('error', function(error){})
             .exec();
 
+```
+
 Twitter stream:
 Seems to be a problem in the es with deleting streams. May require a node restart for modifications/deletes to take effect
+
+
+```javascript
     elasticSearchClient.createOrModifyTwitterRiver(riverName, riverData)
         .on('data', function (data) {
             console.log(data)
@@ -74,7 +85,7 @@ Seems to be a problem in the es with deleting streams. May require a node restar
             console.log(error)
             assert.ok(false)
         }).exec()
-
+```
 
 ## What can i do?
 
