@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/phillro/node-elasticsearch-client.png)](http://travis-ci.org/phillro/node-elasticsearch-client)
 Elastic Search Client
 =====================
 
