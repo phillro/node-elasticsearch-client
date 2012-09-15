@@ -19,8 +19,7 @@ var elasticSearchClient = new ElasticSearchClient(serverOptions);
 describe("ElasticSearchClient Cluster apis", function(){
     describe("#health", function(){
         it("should provide health stats", function(done){
-            elasticSearchClient.health()
-                .on('data', function(data) {
+            elasticSearchClient.health(function(data) {
                     data = JSON.parse(data);
                     data.status.should.be.ok;
                     done();
