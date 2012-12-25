@@ -1,6 +1,6 @@
 assert = require('assert');
 ElasticSearchClient = require('../../lib/elasticsearchclient/elasticSearchClient.js');
-var hashlib = require('hashlib')
+
 var serverOptions = {
     host: 'localhost',
     port: 9200
@@ -32,13 +32,14 @@ testDelete = function() {
     elasticSearchClient.deleteDocument(indexName, objName, 1111)
         .on('data',
         function(data) {
-            console.log(data)
+            console.log("DELETE:"+data)
         }).exec();
 }
 
 testGet = function() {
     elasticSearchClient.get(indexName, objName, 1111)
         .on('data', function(data) {
+            console.log("GET:"+data);
             assert.ok(JSON.parse(data)._source, "testGet failed.")
         })
         .exec()
@@ -124,7 +125,6 @@ testDeleteByQuery = function() {
 }
 
 testMoreLikeThis = function() {
-    
     elasticSearchClient.moreLikeThis(indexName, objName, '4d714f52dd6a90842168b3d1',{})
         .on('data', function(data) {
             console.log(data);
@@ -135,10 +135,10 @@ testMoreLikeThis = function() {
 
 testIndex();
 testGet();
-testDelete();
+setTimeout(testDelete(), 1000);
 
 
 testMoreLikeThis();
-testDeleteByQuery()
+setTimeout(testDeleteByQuery(), 2000);
 testMoreLikeThis();
-testCount()
+testCount();

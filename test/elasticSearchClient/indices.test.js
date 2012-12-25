@@ -1,6 +1,6 @@
 assert = require('assert');
 ElasticSearchClient = require('../../lib/elasticsearchclient/elasticSearchClient.js');
-var hashlib = require('hashlib')
+
 var serverOptions = {
     host: 'localhost',
     port: 9200,
