@@ -1,6 +1,7 @@
-assert = require('assert');
-ElasticSearchClient = require('../../lib/elasticsearchclient/elasticSearchClient.js');
-var hashlib = require('hashlib')
+var ElasticSearchClient = require('../../lib/elasticsearchclient/elasticSearchClient.js')
+,   mocha = require("mocha")
+,   should = require("chai").should();
+
 var serverOptions = {
     host: 'localhost',
     port: 9200
@@ -12,133 +13,149 @@ var serverOptions = {
 };
 
 var indexName = 'your_index_name';
-var objName = 'your_object_name'
+var objName = 'your_object_name';
 
 var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
+describe("ElasticSearchClient", function(){
+    describe("#index", function(){
+        it("should index a json object", function(done){
+            elasticSearchClient.index(indexName, objName, {'name':'name', id:"1111"})
+                .on('data', function(data) {
+                    
+                    (JSON.parse(data)).should.be.ok;
+                    done();
+                })
+                .exec();
+        });
+    });
 
-testIndex = function() {
-    elasticSearchClient.index(indexName, objName, {'name':'name', id:"1111"})
-        .on('data', function(data) {
-            console.log(data)
-            assert.ok(JSON.parse(data), 'textIndex failed. ');
 
-        })
-        .exec()
-}
+    describe("#get", function(){
+        it("should fetch the row by id", function(done){
+            elasticSearchClient.get(indexName, objName, 1111)
+            .on('data', function(data) {
+                (JSON.parse(data))._source.should.be.ok;
+                done();
+            })
+            .exec()
+        });
+    });
 
+    describe("#search", function(){
+        it("should search based on given query", function(done){
+            var qryObj = {
+                "query" : {
+                    "term" : { "name" : "sushi" }
+                }
+            };
+            elasticSearchClient.search(indexName, objName, qryObj)
+                .on('data', function(data) {
+                    
+                    (JSON.parse(data)).should.be.ok;
+                    done();
+                })
+                .exec();
+        });
+    });
 
-testDelete = function() {
-    elasticSearchClient.deleteDocument(indexName, objName, 1111)
-        .on('data',
-        function(data) {
-            console.log(data)
-        }).exec();
-}
+    describe("#delete", function(){
+        it("should delete the row by id", function(done){
+            elasticSearchClient.deleteDocument(indexName, objName, 1111)
+            .on('data', function(data) {
+                (JSON.parse(data)).should.be.ok;
+                done();
+            })
+            .exec()
+        });
+    }); 
 
-testGet = function() {
-    elasticSearchClient.get(indexName, objName, 1111)
-        .on('data', function(data) {
-            assert.ok(JSON.parse(data)._source, "testGet failed.")
-        })
-        .exec()
-}
-
-testSearch = function() {
-    var qryObj = {
-        "query" : {
-            "term" : { "name" : "sushi" }
-        }
-    };
-    elasticSearchClient.search(indexName, objName, qryObj)
-        .on('data', function(data) {
-            console.log(data)
-            assert.ok(JSON.parse(data), "testSearch failed.")
-        })
-        .exec()
-}
-
-testPercolate = function() {
-    var doc = {
-        "doc" : {
-            "field1" : "value1"
-        }
-    }
-
-    elasticSearchClient.percolate(indexName, objName, doc)
-        .on('data',
-        function(data) {
-            assert.ok(JSON.parse(data), "testPercolate failed.")
-        })
-        .exec()
-}
-
-testPercolator = function() {
-    var qryObj = {
-        query: {
-            bool: {
-                should: [
-                    {flt : {
-                        fields : ["name"],
-                        like_text : 'a name'
-                    }
-                    }
-                ]
+    describe("#percolate", function(){
+        it("should percolate", function(done){
+            var doc = {
+                "doc" : {
+                    "field1" : "value1"
+                }
             }
-        }
-    };
-    elasticSearchClient.percolator(indexName, objName, qryObj)
-        .on('data',
-        function(data) {
-            assert.ok(JSON.parse(data), "testPercolator failed.")
-        })
-        .exec()
-}
 
-testBulk = function() {
-    assert.ok(false, 'testBulk not implemented yet.')
-}
+            elasticSearchClient.percolate(indexName, objName, doc)
+                .on('data',
+                function(data) {
+                    (JSON.parse(data)).should.be.ok;
+                    done();
+                })
+                .exec();
+        });
+    });
 
-testCount = function() {
-    var qryStr = 'name:name'
-    elasticSearchClient.count(indexName, objName, qryStr)
-        .on('data',
-        function(data) {
-            console.log(data);
-            assert.ok(JSON.parse(data), "testCount failed.")
-        })
-        .exec()
-}
+    describe("#percolator", function(){
+        it("should be a percolator", function(done){
+            var qryObj = {
+                query: {
+                    bool: {
+                        should: [
+                            {flt : {
+                                fields : ["name"],
+                                like_text : 'a name'
+                            }
+                            }
+                        ]
+                    }
+                }
+            };
+            elasticSearchClient.percolator(indexName, objName, qryObj)
+                .on('data',
+                function(data) {
+                    (JSON.parse(data)).should.be.ok;
+                    done();
+                })
+                .exec();
+        });
+    });
 
-testDeleteByQuery = function() {
-    var qryObj = {
-        term : {
-            name: 'name'
-        }
-    }
-    elasticSearchClient.deleteByQuery(indexName, objName, qryObj)
-        .on('data', function(data) {
-            assert.ok(JSON.parse(data), "testDeleteByQuery failed.")
-        })
-        .exec()
-}
-
-testMoreLikeThis = function() {
+    describe("#bulk", function(){
+        it("should fetch bulk results, not implemented yet", function(done){
+            (false).should.be.ok;
+        });
+    }); 
     
-    elasticSearchClient.moreLikeThis(indexName, objName, '4d714f52dd6a90842168b3d1',{})
-        .on('data', function(data) {
-            console.log(data);
-            assert.ok(JSON.parse(data), "testMoreLikeThis failed.")
-        })
-        .exec()
-}
+    describe("#count", function(){
+        it("should fetch count of given query", function(done){
+            var qryStr = 'name:name'
+            elasticSearchClient.count(indexName, objName, qryStr)
+                .on('data', function(data) {
+                    
+                    (JSON.parse(data)).should.be.ok;
+                    done();
+                })
+                .exec();
+        });
+    }); 
 
-testIndex();
-testGet();
-testDelete();
+    describe('#deleteByQuery', function(){
+        it('should delete objects matching given query', function(done){
+            var qryObj = {
+                term : {
+                    name: 'name'
+                }
+            }
+            elasticSearchClient.deleteByQuery(indexName, objName, qryObj)
+                .on('data', function(data) {
+                    (JSON.parse(data)).should.be.ok;
+                    done();
+                })
+                .exec();
+         });
+    });
 
-
-testMoreLikeThis();
-testDeleteByQuery()
-testMoreLikeThis();
-testCount()
+    describe('#moreLikeThis', function(){
+        it('should show results more like this', function(done){
+            elasticSearchClient.moreLikeThis(indexName, objName, '4d714f52dd6a90842168b3d1',{})
+                .on('data', function(data) {
+                    
+                    (JSON.parse(data)).should.be.ok;
+                    done();
+                }).exec();
+        });
+    });
+});
