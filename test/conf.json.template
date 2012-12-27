@@ -1,5 +1,5 @@
-module.exports = {
-    test:{
+{
+    "test":{
         "twitter":{
             "oauth":{
                 "consumer_key":"****",
@@ -8,10 +8,10 @@ module.exports = {
                 "access_token_secret":"****"
             }
         },
-        es_server_options:{
-            host:'localhost',
-            port:9200,
-            secure:false
+        "es_server_options":{
+            "host":"localhost",
+            "port":9200,
+            "secure":false
         }
     }
 }
