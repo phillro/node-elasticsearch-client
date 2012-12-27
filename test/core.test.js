@@ -19,10 +19,22 @@ var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
 describe("ElasticSearchClient Core api", function(){
     describe("#index", function(){
+
         it("should index a json object", function(done){
+            elasticSearchClient.index(indexName, objName, {'name':'sushi'})
+                .on('data', function(data) {
+                    data = JSON.parse(data);
+                    data.ok.should.be.ok;
+                    done();
+                })
+                .exec();
+        })
+
+        it("should index an object with given id under the same id", function(done){
             elasticSearchClient.index(indexName, objName, {'name':'name', id:"1111"})
                 .on('data', function(data) {
-                    (JSON.parse(data)).should.be.ok;
+                    data = JSON.parse(data);
+                    data._id.should.equal("1111");
                     done();
                 })
                 .exec();
@@ -34,7 +46,9 @@ describe("ElasticSearchClient Core api", function(){
         it("should fetch the row by id", function(done){
             elasticSearchClient.get(indexName, objName, 1111)
             .on('data', function(data) {
-                (JSON.parse(data))._source.should.be.ok;
+                data = JSON.parse(data);
+                data._source.should.be.ok;
+                data._id.should.equal("1111");
                 done();
             })
             .exec()
@@ -50,24 +64,13 @@ describe("ElasticSearchClient Core api", function(){
             };
             elasticSearchClient.search(indexName, objName, qryObj)
                 .on('data', function(data) {
-                    
-                    (JSON.parse(data)).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.not.be.undefined.null.empty;
                     done();
                 })
                 .exec();
         });
     });
-
-    describe("#delete", function(){
-        it("should delete the row by id", function(done){
-            elasticSearchClient.deleteDocument(indexName, objName, 1111)
-            .on('data', function(data) {
-                (JSON.parse(data)).should.be.ok;
-                done();
-            })
-            .exec()
-        });
-    }); 
 
     describe("#percolate", function(){
         it("should percolate", function(done){
@@ -80,7 +83,8 @@ describe("ElasticSearchClient Core api", function(){
             elasticSearchClient.percolate(indexName, objName, doc)
                 .on('data',
                 function(data) {
-                    (JSON.parse(data)).should.be.ok;
+                    data = JSON.parse(data);
+                    data.ok.should.be.ok;
                     done();
                 })
                 .exec();
@@ -105,7 +109,8 @@ describe("ElasticSearchClient Core api", function(){
             elasticSearchClient.percolator(indexName, objName, qryObj)
                 .on('data',
                 function(data) {
-                    (JSON.parse(data)).should.be.ok;
+                    data = JSON.parse(data);
+                    data.ok.should.be.ok;
                     done();
                 })
                 .exec();
@@ -122,10 +127,39 @@ describe("ElasticSearchClient Core api", function(){
             elasticSearchClient.count(indexName, objName, qryStr)
                 .on('data', function(data) {
                     
-                    (JSON.parse(data)).should.be.ok;
+                    data = JSON.parse(data);
+                    data.count.should.exist;
+                    data.count.should.not.be.null.undefined;
                     done();
                 })
                 .exec();
+        });
+    }); 
+
+    describe('#moreLikeThis', function(){
+        it('should show results more like this', function(done){
+            elasticSearchClient.moreLikeThis(indexName, objName, '1111',{})
+                .on('data', function(data) {
+                    data = JSON.parse(data);
+                    data.should.not.be.null.undefined.empty;
+                    data.should.not.have.error;
+                    done();
+                })
+                .exec();
+        });
+    });
+
+    describe("#deleteDocument", function(){
+        it("should delete the row by id", function(done){
+            elasticSearchClient.deleteDocument(indexName, objName, 1111)
+            .on('data', function(data) {
+                data = JSON.parse(data);
+                data.ok.should.be.ok;
+                data.found.should.exist;
+                data._id.should.equal("1111");
+                done();
+            })
+            .exec()
         });
     }); 
 
@@ -138,21 +172,11 @@ describe("ElasticSearchClient Core api", function(){
             }
             elasticSearchClient.deleteByQuery(indexName, objName, qryObj)
                 .on('data', function(data) {
-                    (JSON.parse(data)).should.be.ok;
+                    data = JSON.parse(data);
+                    data.ok.should.be.ok;
                     done();
                 })
                 .exec();
          });
-    });
-
-    describe('#moreLikeThis', function(){
-        it('should show results more like this', function(done){
-            elasticSearchClient.moreLikeThis(indexName, objName, '4d714f52dd6a90842168b3d1',{})
-                .on('data', function(data) {
-                    
-                    (JSON.parse(data)).should.be.ok;
-                    done();
-                }).exec();
-        });
     });
 });

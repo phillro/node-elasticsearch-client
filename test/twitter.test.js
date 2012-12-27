@@ -31,19 +31,23 @@ try{
     console.log(e);
     console.log(" \n\
                 *****************************************************************\n   \
-                *   It seems you haven't provided ./test/conf.json                   *\n   \
+                *   It seems you haven't provided ./test/conf.json              *\n   \
                 *   Make sure to put the file in place, we have made a          *\n   \
-                *   template available for you at ./test/conf.js.template     *\n   \
+                *   template available for you at ./test/conf.json.template     *\n   \
                 *****************************************************************\n   \
     ");
 }
 
 describe('twitter api', function(){
     describe('#createOrModifyTwitterRiver', function(){
-        it('should create/modify the twiiter river', function(done){
+        it('should create/modify the twitter river', function(done){
+
+            if(!conf || !elasticSearchClient) return done();
+
             elasticSearchClient.createOrModifyTwitterRiver(riverName, riverData)
                 .on('data', function (data) {
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.ok.should.be.ok;
                     done();
                 })
                 .on('error', function (error) {
@@ -54,20 +58,18 @@ describe('twitter api', function(){
 
     describe('#deleteTwitterRiver', function(){
         it('should delete the twitter river with given name', function(done){
+
+            if(!conf || !elasticSearchClient) return done();
+
             elasticSearchClient.deleteTwitterRiver(riverName)
                 .on('data', function (data) {
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.ok.should.be.ok;
                     done();
                 })
                 .on('error', function (error) {
 
                 }).exec();
         });
-    });
-
-    afterEach(function(){
-        if(!conf){
-            this.test.error(new Error("Error requiring './conf', make sure you have provided test/conf.json file"));
-        }
     });
 });

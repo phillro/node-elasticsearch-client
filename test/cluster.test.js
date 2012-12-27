@@ -22,8 +22,8 @@ describe("ElasticSearchClient Cluster apis", function(){
         it("should provide health stats", function(done){
             elasticSearchClient.health()
                 .on('data', function(data) {
-                    
-                    (JSON.parse(data)).should.be.ok;
+                    data = JSON.parse(data);
+                    data.status.should.be.ok;
                     done();
                 })
                 .exec();
@@ -35,7 +35,8 @@ describe("ElasticSearchClient Cluster apis", function(){
         it("should test state", function(done){
             elasticSearchClient.state({filter_nodes:true})
                 .on('data', function(data) {
-                    (JSON.parse(data)).should.be.ok;
+                    data = JSON.parse(data);
+                    data.routing_nodes.should.be.ok;
                     done();
                 })
                 .exec();
@@ -46,7 +47,8 @@ describe("ElasticSearchClient Cluster apis", function(){
         it("should provide nodes' info", function(done){
             elasticSearchClient.nodesInfo([])
                 .on('data', function( data) {
-                    (JSON.parse(data)).should.be.ok;
+                    data = JSON.parse(data);
+                    data.ok.should.be.ok;
                     done();
                 })
                 .exec();
@@ -57,7 +59,8 @@ describe("ElasticSearchClient Cluster apis", function(){
         it("should provide node statistics", function(done){
             elasticSearchClient.nodesStats([])
             .on('data', function( data) {
-                (JSON.parse(data)).should.be.ok;
+                data = JSON.parse(data);
+                    data.nodes.should.be.ok;
                 done();
             })
             .exec();
@@ -73,7 +76,8 @@ describe("ElasticSearchClient Cluster apis", function(){
         it("should shut down the node"/*, function(done){
             elasticSearchClient.nodesShutdown([])
                 .on('data', function( data) {
-                    (JSON.parse(data)).should.be.ok;
+                    data = JSON.parse(data);
+                    data.ok.should.be.ok;
                     done();
                 })
                 .exec();

@@ -45,7 +45,8 @@ describe("ElasticSearchClient indices api", function(){
             }
             elasticSearchClient.createIndex(indexName, aliases)
                 .on('data', function(data) {
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -59,7 +60,8 @@ describe("ElasticSearchClient indices api", function(){
             elasticSearchClient.analyze(indexName,'this is a ')
                 .on('data', function(data) {
                     // console.log(data)
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -72,7 +74,8 @@ describe("ElasticSearchClient indices api", function(){
             elasticSearchClient.createIndex(indexName)
                 .on('data', function(data) {
                     // console.log(data);
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -84,7 +87,8 @@ describe("ElasticSearchClient indices api", function(){
         it("should open the given index", function(done){
             elasticSearchClient.openIndex(indexName)
                 .on('data', function(data) {
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -96,7 +100,8 @@ describe("ElasticSearchClient indices api", function(){
         it("should close the given index", function(done){
             elasticSearchClient.openIndex(indexName)
                 .on('data', function(data) {
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -109,7 +114,8 @@ describe("ElasticSearchClient indices api", function(){
             elasticSearchClient.getSettings(indexName)
                 .on('data', function(data) {
                     // console.log(data);
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -126,7 +132,8 @@ describe("ElasticSearchClient indices api", function(){
             }
             elasticSearchClient.updateSettings(indexName, settings)
                 .on('data', function(data) {
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
 
                 })
@@ -140,7 +147,8 @@ describe("ElasticSearchClient indices api", function(){
             elasticSearchClient.getMapping(indexName, objName)
                 .on('data', function(data) {
                     // console.log(data);
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -152,7 +160,8 @@ describe("ElasticSearchClient indices api", function(){
     	it("should put mappings", function(done){
             elasticSearchClient.putMapping(indexName, objName, tweet)
                 .on('data', function(data) {
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 }).on('done', function(data) {
 
@@ -166,7 +175,8 @@ describe("ElasticSearchClient indices api", function(){
     	it("should refresh", function(done){
             elasticSearchClient.refresh(indexName)
                     .on('data', function(data) {
-                        JSON.parse(data).should.be.ok;
+                        data = JSON.parse(data);
+                    data.should.be.ok;
                         done();
                     })
                     .exec();
@@ -179,7 +189,8 @@ describe("ElasticSearchClient indices api", function(){
             elasticSearchClient.optimize(indexName)
                 .on('data', function(data) {
                     // console.log(data)
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -192,7 +203,8 @@ describe("ElasticSearchClient indices api", function(){
             elasticSearchClient.flush(indexName)
                 .on('data', function(data) {
                     // console.log(data);
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -205,7 +217,8 @@ describe("ElasticSearchClient indices api", function(){
             elasticSearchClient.snapshot(indexName)
                 .on('data', function(data) {
                     // console.log(data)
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -217,7 +230,8 @@ describe("ElasticSearchClient indices api", function(){
             elasticSearchClient.defineTemplate('Template', template)
                 .on('data', function(data) {
                     // console.log(data)
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -230,7 +244,8 @@ describe("ElasticSearchClient indices api", function(){
             elasticSearchClient.getTemplate('Template', template)
                 .on('data', function(data) {
                     // console.log(data)
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -243,7 +258,8 @@ describe("ElasticSearchClient indices api", function(){
             elasticSearchClient.deleteTemplate('Template', template)
                 .on('data', function(data) {
                     // console.log(data)
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -256,7 +272,8 @@ describe("ElasticSearchClient indices api", function(){
             elasticSearchClient.status(indexName)
                 .on('data', function(data) {
                     // console.log(data)
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -268,7 +285,8 @@ describe("ElasticSearchClient indices api", function(){
     	it("should clear the cache", function(done){
             elasticSearchClient.clearCache(indexName)
                 .on('data', function(data) {
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
@@ -280,7 +298,8 @@ describe("ElasticSearchClient indices api", function(){
         it("should delete index", function(done){
             elasticSearchClient.deleteIndex(indexName)
                 .on('data', function(data) {
-                     JSON.parse(data).should.be.ok;
+                     data = JSON.parse(data);
+                    data.should.be.ok;
                      done()
                 })
                 .exec();
@@ -292,7 +311,8 @@ describe("ElasticSearchClient indices api", function(){
         it("should delete mappings", function(done){
             elasticSearchClient.deleteMapping(indexName, objName)
                 .on('data', function(data) {
-                    JSON.parse(data).should.be.ok;
+                    data = JSON.parse(data);
+                    data.should.be.ok;
                     done();
                 })
                 .exec();
