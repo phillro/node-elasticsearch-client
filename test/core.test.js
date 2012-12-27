@@ -1,4 +1,4 @@
-var ElasticSearchClient = require('../../lib/elasticsearchclient/elasticSearchClient.js')
+var ElasticSearchClient = require('../lib/elasticsearchclient/elasticSearchClient.js')
 ,   mocha = require("mocha")
 ,   should = require("chai").should();
 
@@ -17,12 +17,11 @@ var objName = 'your_object_name';
 
 var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
-describe("ElasticSearchClient", function(){
+describe("ElasticSearchClient Core api", function(){
     describe("#index", function(){
         it("should index a json object", function(done){
             elasticSearchClient.index(indexName, objName, {'name':'name', id:"1111"})
                 .on('data', function(data) {
-                    
                     (JSON.parse(data)).should.be.ok;
                     done();
                 })
@@ -114,10 +113,8 @@ describe("ElasticSearchClient", function(){
     });
 
     describe("#bulk", function(){
-        it("should fetch bulk results, not implemented yet", function(done){
-            (false).should.be.ok;
-        });
-    }); 
+        it("should fetch bulk results, not implemented yet");
+    });
     
     describe("#count", function(){
         it("should fetch count of given query", function(done){
