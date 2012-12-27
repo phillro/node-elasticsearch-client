@@ -1,4 +1,4 @@
-var ElasticSearchClient = require('../../lib/elasticsearchclient/elasticSearchClient.js')
+var ElasticSearchClient = require('../lib/elasticsearchclient/elasticSearchClient.js')
 ,   mocha = require("mocha")
 ,   should = require("chai").should();
 
@@ -61,17 +61,23 @@ describe("ElasticSearchClient Cluster apis", function(){
                 done();
             })
             .exec();
-    }); 
+        });
+    });
 
     describe("#nodeShutdown", function(){
-        it("should shut down the node", function(done){
+        /*
+        *  Temporarily disabled so that other tests have chance to succeed before
+        *   the node shuts down
+        */
+
+        it("should shut down the node"/*, function(done){
             elasticSearchClient.nodesShutdown([])
                 .on('data', function( data) {
                     (JSON.parse(data)).should.be.ok;
                     done();
                 })
                 .exec();
-            });
-        });
+        }*/);
     });
+
 });
