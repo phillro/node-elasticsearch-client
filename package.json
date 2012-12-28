@@ -18,5 +18,8 @@
     "repository": {
         "type": "git",
         "url": "git://github.com/phillro/node-elasticsearch-client.git"
+    },
+    "scripts": {
+        "test": "./node_modules/.bin/mocha"
     }
 }
