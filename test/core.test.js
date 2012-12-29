@@ -18,8 +18,19 @@ var objName = 'your_object_name';
 var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
 describe("ElasticSearchClient Core api", function(){
-    describe("#index", function(){
 
+    before(function(done){
+        /*
+        *   To allow running tests individually `mocha --grep search`
+        */
+        elasticSearchClient.index(indexName, objName, {'name':'sushi', id: 'sushi'})
+            .on('data', function(){
+                done();
+            })
+            .exec();
+    });
+
+    describe("#index", function(){
         it("should index a json object", function(done){
             elasticSearchClient.index(indexName, objName, {'name':'sushi'})
                 .on('data', function(data) {
@@ -44,11 +55,12 @@ describe("ElasticSearchClient Core api", function(){
 
     describe("#get", function(){
         it("should fetch the row by id", function(done){
-            elasticSearchClient.get(indexName, objName, 1111)
+            elasticSearchClient.get(indexName, objName, "sushi")
             .on('data', function(data) {
                 data = JSON.parse(data);
+                data.exists.should.exist;
+                data._id.should.equal("sushi");
                 data._source.should.be.ok;
-                data._id.should.equal("1111");
                 done();
             })
             .exec()
@@ -66,6 +78,39 @@ describe("ElasticSearchClient Core api", function(){
                 .on('data', function(data) {
                     data = JSON.parse(data);
                     data.should.not.be.undefined.null.empty;
+                    data.hits.total.should.be.gte(0);
+                    done();
+                })
+                .exec();
+        });
+
+        it("should search even if collection name not present", function(done){
+            var qryObj = {
+                "query" : {
+                    "term" : { "name" : "sushi" }
+                }
+            };
+            elasticSearchClient.search(indexName, qryObj)
+                .on('data', function(data) {
+                    data = JSON.parse(data);
+                    data.should.not.be.undefined.null.empty;
+                    data.hits.total.should.be.gte(0);
+                    done();
+                })
+                .exec();
+        });
+
+        it("should search even if index_name is not present", function(done){
+            var qryObj = {
+                "query" : {
+                    "term" : { "name" : "sushi" }
+                }
+            };
+            elasticSearchClient.search(indexName, qryObj)
+                .on('data', function(data) {
+                    data = JSON.parse(data);
+                    data.should.not.be.undefined.null.empty;
+                    data.hits.total.should.be.at.least(0);
                     done();
                 })
                 .exec();
@@ -174,6 +219,7 @@ describe("ElasticSearchClient Core api", function(){
                 .on('data', function(data) {
                     data = JSON.parse(data);
                     data.ok.should.be.ok;
+                    data._indices.should.have.indexName;
                     done();
                 })
                 .exec();
