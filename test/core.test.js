@@ -106,7 +106,7 @@ describe("ElasticSearchClient Core api", function(){
                     "term" : { "name" : "sushi" }
                 }
             };
-            elasticSearchClient.search(indexName, qryObj)
+            elasticSearchClient.search(qryObj)
                 .on('data', function(data) {
                     data = JSON.parse(data);
                     data.should.not.be.undefined.null.empty;
