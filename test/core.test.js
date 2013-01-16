@@ -67,6 +67,53 @@ describe("ElasticSearchClient Core api", function(){
         });
     });
 
+    describe("#update", function(){
+        it("should update the existing doc by id", function(done){
+            elasticSearchClient.update(indexName, objName, "sushi", {occupation: "play"})
+            .on('data', function(data) {
+                data = JSON.parse(data);
+                data.should.be.ok;
+                data._id.should.equal("sushi");
+                done();
+            })
+            .exec()
+        });
+
+        it("should update the existing doc even if only an object with id is passed", function(done){
+            elasticSearchClient.update(indexName, objName, {id: "sushi", age: 23})
+            .on('data', function(data) {
+                data = JSON.parse(data);
+                data.should.be.ok;
+                data._id.should.equal("sushi");
+                done();
+            })
+            .exec()
+        });
+
+        it("should throw error when no id is passed", function(){
+            (function() {
+                elasticSearchClient.update(indexName, objName, {age: 23});    
+            })
+            .should.throw;
+        });
+
+        it("should not throw even when no data is provided", function(){
+            (function() {
+                elasticSearchClient.update(indexName, objName, {age: 25})
+                .on('data', function(data) {
+                    data = JSON.parse(data);
+                    data.should.be.ok;
+                    data.error.should.equal.be.ok;
+                    data.status.should.equal(500);
+                    done();
+            })
+            .exec()
+            })
+            .should.not.throw;
+        });
+
+    });
+
     describe("#search", function(){
         it("should search based on given query", function(done){
             var qryObj = {
@@ -171,7 +218,6 @@ describe("ElasticSearchClient Core api", function(){
             var qryStr = 'name:name'
             elasticSearchClient.count(indexName, objName, qryStr)
                 .on('data', function(data) {
-                    
                     data = JSON.parse(data);
                     data.count.should.exist;
                     data.count.should.not.be.null.undefined;
