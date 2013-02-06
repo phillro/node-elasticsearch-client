@@ -1,5 +1,4 @@
-var ElasticSearchClient = require('../lib/elasticsearchclient/elasticSearchClient.js')
-,   mocha = require("mocha")
+var ElasticSearchClient = require('..')
 ,   should = require("chai").should();
 
 var serverOptions = {

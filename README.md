@@ -88,6 +88,13 @@ elasticSearchClient.createOrModifyTwitterRiver(riverName, riverData)
         assert.ok(false)
     }).exec()
 ```
+## Code coverage
+
+Run code coverage by executing:
+
+	$npm run-script coverage
+
+*Requires [visionmedia/jscoverage](https://github.com/visionmedia/node-jscoverage)
 
 ## What can i do?
 
