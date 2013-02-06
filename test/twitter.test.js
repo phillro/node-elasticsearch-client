@@ -1,6 +1,5 @@
 var assert = require('assert')
-,   ElasticSearchClient = require('../lib/elasticsearchclient/elasticSearchClient.js')
-,   mocha = require("mocha")
+,   ElasticSearchClient = require('..')
 ,   should = require("chai").should()
 ,   elasticSearchClient, conf, serverOptions, riverData;
 
