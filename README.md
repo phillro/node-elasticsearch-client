@@ -41,22 +41,22 @@ var qryObj = {
 }
 
 elasticSearchClient.search('my_index_name', 'my_type_name', qryObj)
-            .on('data', function(data) {
-                console.log(JSON.parse(data))
-            })
-            .on('done', function(){
-                //always returns 0 right now
-            })
-            .on('error', function(error){
-                console.log(error)
-            })
-            .exec()
+    .on('data', function(data) {
+        console.log(JSON.parse(data))
+    })
+    .on('done', function(){
+        //always returns 0 right now
+    })
+    .on('error', function(error){
+        console.log(error)
+    })
+    .exec()
 
-elasticSearchClient.index('my_index_name', 'my_type_name', {'name':'name', id:"1111"})
-            .on('data', function(data) {
-                console.log(data)
-            })
-            .exec()
+elasticSearchClient.index('my_index_name', 'my_type_name', /* _id (optional) */'1111', {'name':'name'})
+    .on('data', function(data) {
+        console.log(data)
+    })
+    .exec()
 
 //Bulk index example
 var commands = []
