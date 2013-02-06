@@ -20,6 +20,7 @@
         "url": "git://github.com/phillro/node-elasticsearch-client.git"
     },
     "scripts": {
-        "test": "./node_modules/.bin/mocha"
+        "test": "make test",
+        "coverage": "make test-cov --no-print-directory"
     }
 }
