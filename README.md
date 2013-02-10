@@ -18,8 +18,11 @@ ElasticSearchClient = require('elasticsearchclient');
 var serverOptions = {
     host: 'localhost',
     port: 9200,
+    pathPrefix:'optional pathPrefix',
+    secure: true||false
 };
 ```
+
 
 OR specify multiple hosts
 
@@ -52,7 +55,7 @@ elasticSearchClient.search('my_index_name', 'my_type_name', qryObj)
     })
     .exec()
 
-elasticSearchClient.index('my_index_name', 'my_type_name', /* _id (optional) */'1111', {'name':'name'})
+elasticSearchClient.index(indexName, typeName, document, id, options)
     .on('data', function(data) {
         console.log(data)
     })
