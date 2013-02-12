@@ -1,5 +1,5 @@
 var assert = require('assert')
-,   ElasticSearchClient = require('..')
+,   ElasticSearchClient = require('../..')
 ,   should = require("chai").should()
 ,   elasticSearchClient, conf, serverOptions, riverData;
 
@@ -10,7 +10,7 @@ var riverName = 'ma_twitter_river'
 var bulkSize = 50
 
 try{   
-    conf = require('./conf').test;
+    conf = require('../conf').test;
     
     serverOptions = conf.es_server_options;
 
@@ -43,11 +43,15 @@ describe('twitter api', function(){
 
             if(!conf || !elasticSearchClient) return done();
 
-            elasticSearchClient.createOrModifyTwitterRiver(riverName, riverData, function (err, data) {
-                should.equal(err, null);
-                data.ok.should.be.ok;
-                done();
-            });
+            elasticSearchClient.createOrModifyTwitterRiver(riverName, riverData)
+                .on('data', function (data) {
+                    data = JSON.parse(data);
+                    data.ok.should.be.ok;
+                    done();
+                })
+                .on('error', function (error) {
+
+                }).exec()
         });
     });
 
@@ -56,11 +60,15 @@ describe('twitter api', function(){
 
             if(!conf || !elasticSearchClient) return done();
 
-            elasticSearchClient.deleteTwitterRiver(riverName, function (err, data) {
-                should.equal(err, null);
-                data.ok.should.be.ok;
-                done();
-            });
+            elasticSearchClient.deleteTwitterRiver(riverName)
+                .on('data', function (data) {
+                    data = JSON.parse(data);
+                    data.ok.should.be.ok;
+                    done();
+                })
+                .on('error', function (error) {
+
+                }).exec();
         });
     });
 });
