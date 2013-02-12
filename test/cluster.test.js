@@ -19,50 +19,42 @@ var elasticSearchClient = new ElasticSearchClient(serverOptions);
 describe("ElasticSearchClient Cluster apis", function(){
     describe("#health", function(){
         it("should provide health stats", function(done){
-            elasticSearchClient.health()
-                .on('data', function(data) {
-                    data = JSON.parse(data);
+            elasticSearchClient.health(function(err, data) {
+                    should.equal(err, null);
                     data.status.should.be.ok;
                     done();
-                })
-                .exec();
+                });
         });
     });
 
 
     describe("#state", function(){
         it("should test state", function(done){
-            elasticSearchClient.state({filter_nodes:true})
-                .on('data', function(data) {
-                    data = JSON.parse(data);
+            elasticSearchClient.state({filter_nodes:true}, function(err, data) {
+                    should.equal(err, null);
                     data.routing_nodes.should.be.ok;
                     done();
-                })
-                .exec();
+                });
         });
     });
 
     describe("#nodesInfo", function(){
         it("should provide nodes' info", function(done){
-            elasticSearchClient.nodesInfo([])
-                .on('data', function( data) {
-                    data = JSON.parse(data);
+            elasticSearchClient.nodesInfo([], function(err, data) {
+                    should.equal(err, null);
                     data.ok.should.be.ok;
                     done();
-                })
-                .exec();
+                });
         });
     });
 
     describe("#nodesStats", function(){
         it("should provide node statistics", function(done){
-            elasticSearchClient.nodesStats([])
-            .on('data', function( data) {
-                data = JSON.parse(data);
-                    data.nodes.should.be.ok;
+            elasticSearchClient.nodesStats([], function(err, data) {
+                should.equal(err, null);
+                data.nodes.should.be.ok;
                 done();
-            })
-            .exec();
+            });
         });
     });
 
@@ -73,13 +65,11 @@ describe("ElasticSearchClient Cluster apis", function(){
         */
 
         it.skip("should shut down the node", function(done){
-            elasticSearchClient.nodesShutdown([])
-                .on('data', function( data) {
-                    data = JSON.parse(data);
+            elasticSearchClient.nodesShutdown([], function( data) {
+                    should.equal(err, null);
                     data.ok.should.be.ok;
                     done();
-                })
-                .exec();
+                });
         });
     });
 

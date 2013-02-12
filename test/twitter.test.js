@@ -43,15 +43,11 @@ describe('twitter api', function(){
 
             if(!conf || !elasticSearchClient) return done();
 
-            elasticSearchClient.createOrModifyTwitterRiver(riverName, riverData)
-                .on('data', function (data) {
-                    data = JSON.parse(data);
-                    data.ok.should.be.ok;
-                    done();
-                })
-                .on('error', function (error) {
-
-                }).exec()
+            elasticSearchClient.createOrModifyTwitterRiver(riverName, riverData, function (err, data) {
+                should.equal(err, null);
+                data.ok.should.be.ok;
+                done();
+            });
         });
     });
 
@@ -60,15 +56,11 @@ describe('twitter api', function(){
 
             if(!conf || !elasticSearchClient) return done();
 
-            elasticSearchClient.deleteTwitterRiver(riverName)
-                .on('data', function (data) {
-                    data = JSON.parse(data);
-                    data.ok.should.be.ok;
-                    done();
-                })
-                .on('error', function (error) {
-
-                }).exec();
+            elasticSearchClient.deleteTwitterRiver(riverName, function (err, data) {
+                should.equal(err, null);
+                data.ok.should.be.ok;
+                done();
+            });
         });
     });
 });
