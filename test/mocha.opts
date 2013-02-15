@@ -2,3 +2,4 @@
 --growl
 --reporter spec
 --debug
+--recursive
