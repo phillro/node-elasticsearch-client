@@ -237,4 +237,62 @@ describe("ElasticSearchClient Core api", function(){
                 .exec();
          });
     });
+    
+    describe("#upsert", function(){
+    	var id = "upsertable";
+    	var initialValue = 'first';
+    	var secondValue = 'second';
+        it("should insert non existing document", function(done){
+        	var script = "ctx._source.occupation = param1;";
+        	var params = {param1: "doesn't matter as this shouldn't apply for a new document"};
+        	var doc = {occupation: initialValue};
+            elasticSearchClient.upsert(indexName, objName, id , script, params, doc)
+            .on('data', function(data) {
+                data = JSON.parse(data);
+                data.should.be.ok;
+                data._id.should.equal(id);
+                done();
+            })
+            .exec();
+        });
+        it("should fetch the newly upserted row by id", function(done){
+            elasticSearchClient.get(indexName, objName, id)
+            .on('data', function(data) {
+                data = JSON.parse(data);
+                data.exists.should.exist;
+                data._id.should.equal(id);
+                // ensure that the insert part of the upsert has worked as this should be a new record.
+                data._source.occupation.should.equal(initialValue);
+                done();
+            })
+            .exec();
+        });        
+        it("should update existing document", function(done){
+        	var id = "upsertable";
+        	var script = 'ctx._source.occupation = param1;';
+        	var params = {param1: secondValue};
+        	var doc = {occupation: "doesn't matter as this shouldn't be applied to existing document"};
+        	elasticSearchClient.upsert(indexName, objName,id , script, params, doc)
+        	.on('data', function(data) {
+        		data = JSON.parse(data);
+        		data.should.be.ok;
+        		data._id.should.equal(id);
+        		done();
+        	})
+        	.exec()
+        });
+        it("should fetch the updated row by id", function(done){
+            elasticSearchClient.get(indexName, objName, id)
+            .on('data', function(data) {
+                data = JSON.parse(data);
+                data.exists.should.exist;
+                data._id.should.equal(id);
+                // make sure that the script has executed to update the existing record
+                data._source.occupation.should.equal(secondValue);
+                done();
+            })
+            .exec();
+        });  
+    });    
+    
 });
