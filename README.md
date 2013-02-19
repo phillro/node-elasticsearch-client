@@ -55,6 +55,24 @@ elasticSearchClient.search('my_index_name', 'my_type_name', qryObj)
     })
     .exec()
 
+//Canonical search
+ elasticSearchClient.search('my_index_name', 'my_type_name', qryObj, function(err, data){
+    console.log(JSON.parse(data))
+ })
+
+//Search call as a reusable object with a canonical callback
+mySearchCall = elasticSearchClient.search('my_index_name', 'my_type_name', qryObj);
+//Do it once
+mySearchCall.exec(function(err, data){
+    console.log(JSON.parse(data))
+})
+//Do it twice
+mySearchCall.exec(function(err, data){
+    console.log(JSON.parse(data))
+})
+
+
+
 elasticSearchClient.index(indexName, typeName, document, id, options)
     .on('data', function(data) {
         console.log(data)
