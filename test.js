@@ -17,9 +17,10 @@ var serverOptions = {
 ES = require('./');
 client = new ES(serverOptions);
 
-client.index('test-index', 'test-type', {'name':'sushi'}, function(err,data){
+client.update('test-index', 'test-type', "5lDfD_c0RgWqdKFQ-PJU1g", {name: "jerky"}, function(err,data){
+    data = JSON.parse(data);
     console.log(data)
-
 })
+
 
 console.log('stuff');

@@ -84,6 +84,18 @@ describe("ElasticSearchClient Core api", function(){
         });
     });
 
+    describe("#get canonical", function(){
+        it("should fetch the row by id", function(done){
+            elasticSearchClient.get(indexName, objName, "sushi", function(err,data){
+                data = JSON.parse(data);
+                data.exists.should.exist;
+                data._id.should.equal("sushi");
+                data._source.should.be.ok;
+                done();
+            })
+        });
+    });
+
     describe("#update", function(){
         it("should update the existing doc by id", function(done){
             elasticSearchClient.update(indexName, objName, "sushi", {occupation: "play"})
@@ -94,6 +106,18 @@ describe("ElasticSearchClient Core api", function(){
                 done();
             })
             .exec()
+        });
+
+    });
+
+    describe("#update canonical", function(){
+        it("should update the existing doc by id", function(done){
+            elasticSearchClient.update(indexName, objName, "sushi", {occupation: "play"}, function(err,data){
+                data = JSON.parse(data);
+                data.should.be.ok;
+                data._id.should.equal("sushi");
+                done();
+            })
         });
 
     });
@@ -145,6 +169,50 @@ describe("ElasticSearchClient Core api", function(){
                     done();
                 })
                 .exec();
+        });
+    });
+
+    describe("#search canonical", function(){
+        it("should search based on given query", function(done){
+            var qryObj = {
+                "query" : {
+                    "term" : { "name" : "sushi" }
+                }
+            };
+            elasticSearchClient.search(indexName, objName, qryObj, function(err,data){
+                data = JSON.parse(data);
+                data.should.not.be.undefined.null.empty;
+                data.hits.total.should.be.gte(0);
+                done();
+            })
+        });
+
+        it("should search even if collection name not present", function(done){
+            var qryObj = {
+                "query" : {
+                    "term" : { "name" : "sushi" }
+                }
+            };
+            elasticSearchClient.search(indexName, qryObj, function(err,data){
+                data = JSON.parse(data);
+                data.should.not.be.undefined.null.empty;
+                data.hits.total.should.be.gte(0);
+                done();
+            })
+        });
+
+        it("should search even if index_name is not present", function(done){
+            var qryObj = {
+                "query" : {
+                    "term" : { "name" : "sushi" }
+                }
+            };
+            elasticSearchClient.search(qryObj, function(err, data){
+                data = JSON.parse(data);
+                data.should.not.be.undefined.null.empty;
+                data.hits.total.should.be.at.least(0);
+                done();
+            })
         });
     });
 
