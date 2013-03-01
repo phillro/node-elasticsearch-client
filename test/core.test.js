@@ -68,7 +68,7 @@ describe("ElasticSearchClient Core api", function(){
 
     describe("#update", function(){
         it("should update the existing doc by id", function(done){
-            elasticSearchClient.update(indexName, objName, "sushi", {occupation: "play"})
+            elasticSearchClient.update(indexName, objName, "sushi", {doc:{occupation: "play"}})
             .on('data', function(data) {
                 data = JSON.parse(data);
                 data.should.be.ok;
