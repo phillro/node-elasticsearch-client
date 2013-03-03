@@ -112,7 +112,7 @@ describe("ElasticSearchClient Core api", function(){
 
     describe("#update canonical", function(){
         it("should update the existing doc by id", function(done){
-            elasticSearchClient.update(indexName, objName, "sushi", {occupation: "play"}, function(err,data){
+            elasticSearchClient.update(indexName, objName, "sushi", {doc:{occupation: "play"}}, function(err,data){
                 data = JSON.parse(data);
                 data.should.be.ok;
                 data._id.should.equal("sushi");
