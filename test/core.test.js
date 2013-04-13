@@ -262,7 +262,50 @@ describe("ElasticSearchClient Core api", function(){
     });
 
     describe("#bulk", function(){
-        it("should fetch bulk results, not implemented yet");
+        var cmdArr = [
+            {index:{_index:indexName,_type:objName,_id:'bulkedsushi'}},
+            {name:'anothersushi'}
+        ];
+        var cmdArrNoIndexAndNoType = [
+            {index:{_id:'bulkedsushi'}},
+            {name:'anothersushi'}
+        ];
+        var check = function(data, done) {
+            data = JSON.parse(data);
+            data.items.should.be.ok;
+            data.items[0].should.be.ok;
+            data.items[0].index.should.be.ok;
+            done();
+        };
+        it("should index via bulk canonical", function(done) {
+            elasticSearchClient.bulk(cmdArr, function(err,data){
+                check(data,done);
+            });
+        });
+        it("should index via bulk canonical even if options are passed", function(done) {
+            elasticSearchClient.bulk(cmdArr, {}, function(err,data){
+                check(data,done);
+            });
+        });
+        it("should index via bulk event style", function(done) {
+            elasticSearchClient.bulk(cmdArr)
+            .on('data', function(data){
+                check(data,done);
+            })
+            .exec();
+        });
+        it("should index via bulk event style pass index and type via the options", function(done) {
+            elasticSearchClient.bulk(cmdArrNoIndexAndNoType, { _index: indexName, _type: objName})
+            .on('data', function(data){
+                check(data,done);
+            })
+            .exec();
+        });
+        it("should index via bulk canonical pass index and type via the options", function(done) {
+            elasticSearchClient.bulk(cmdArrNoIndexAndNoType, { _index: indexName, _type: objName}, function(err,data){
+                check(data,done);
+            });
+        });
     });
     
     describe("#count", function(){
