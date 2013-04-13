@@ -344,6 +344,20 @@ describe("ElasticSearchClient indices api", function(){
     });
 
 
+    describe("#getSegments", function(){
+        it("should get segments", function(done){
+            elasticSearchClient.getSegments(indexName)
+                .on('data', function(data) {
+                    data = JSON.parse(data);
+                    data.should.be.ok;
+                    data.indices[indexName].shards.should.be.ok.not.be.empty;
+                    done();
+                })
+                .exec();
+        });
+    });
+
+
     after(function(done){
         elasticSearchClient.deleteIndex(indexName)
             .on('data', function(data) {
