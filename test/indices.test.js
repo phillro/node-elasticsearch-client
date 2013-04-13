@@ -161,31 +161,92 @@ describe("ElasticSearchClient indices api", function(){
 
     
     describe("#putMapping", function(){
-        it("should put mappings", function(done){
+        var check = function(err, data, done) {
+            data = JSON.parse(data);
+            data.ok.should.be.ok;
+            data.acknowledged.should.be.true;
+            done(err);
+        };
+        var checkError = function(err, data, done) {
+            data = JSON.parse(data);
+            data.error.should.be.a('string');
+            data.status.should.eql(500);
+            done(err);
+        };
+        it("should put mappings one object one index", function(done){
             elasticSearchClient.putMapping(indexName, objName, tweet)
                 .on('data', function(data) {
-                    data = JSON.parse(data);
-                    data.ok.should.be.ok;
-                    data.acknowledged.should.be.true;
-                    done();
-                }).on('done', function(data) {
-
+                    check(null, data, done);
                 })
                 .exec();
+        });
+        it("should put mappings one object one index canonical style no options", function(done){
+            elasticSearchClient.putMapping(indexName, objName, tweet, function(err, data) {
+                check(err, data, done);
+            });
+        });
+        it("should put mappings one object one index canonical style with options", function(done){
+            elasticSearchClient.putMapping(indexName, objName, tweet, {}, function(err, data) {
+                check(err, data, done);
+            });
+        });
+        it("should fail to put a mapping if the typeName is unspecified", function(done){
+            elasticSearchClient.putMapping(indexName, null, { does_nothing: 'no matter'})
+                .on('data', function(data) {
+                    checkError(null, data, done);
+                })
+                .exec();
+        });
+        it("should fail to put a mapping if the typeName is unspecified canonical style", function(done){
+            elasticSearchClient.putMapping(indexName, null, { does_nothing: 'no matter'}, function(err, data) {
+                checkError(null, data, done);
+            });
+        });
+        it("should fail to put a mapping if the typeName is unspecified canonical style with options", function(done){
+            elasticSearchClient.putMapping(indexName, null, { does_nothing: 'no matter'}, { pretty: true }, function(err, data) {
+                checkError(null, data, done);
+            });
         });
     });
     
 
     describe("#getMapping", function(){
-    	it("should get mappings", function(done){
+        var check = function(data, propertyToCheck, done) {
+            data = JSON.parse(data);
+            data.should.be.ok;
+            data[propertyToCheck].should.exist;
+            done(null, data);
+        };
+        it("should get mappings for one object in one index", function(done){
             elasticSearchClient.getMapping(indexName, objName)
                 .on('data', function(data) {
-                    data = JSON.parse(data);
-                    data.should.be.ok;
-                    // data[objName].properties.should.exist;
-                    done();
+                    check(data, objName, done);
                 })
                 .exec();
+        });
+        it("should get mappings for all objects in one index", function(done){
+            elasticSearchClient.getMapping(indexName, null)
+                .on('data', function(data) {
+                    check(data, indexName, done);
+                })
+                .exec();
+        });
+        it("should get mappings for all indexes", function(done){
+            elasticSearchClient.getMapping()
+                .on('data', function(data) {
+                    check(data, indexName, done);
+                })
+                .exec();
+        });
+        it("should get mappings for one object in one index canonical no options", function(done){
+            elasticSearchClient.getMapping(indexName, objName, function(err, data) {
+                    check(data, objName, done);
+                });
+        });
+        it("should get mappings for one object in one index canonical with options", function(done){
+            elasticSearchClient.getMapping(indexName, objName, {}, function(err, data) {
+                    check(data, objName, done);
+                });
         });
     });
 
