@@ -1,5 +1,6 @@
 var ElasticSearchClient = require('..')
-,   should = require("chai").should();
+,   should = require("chai").should()
+,   http = require('http');
 
 var serverOptions = {
     host: 'localhost',
@@ -365,5 +366,29 @@ describe("ElasticSearchClient Core api", function(){
                 })
                 .exec();
          });
+    });
+
+    describe('#custom http agent', function() {
+        it('should support using a custom http agent', function(done) {
+            var serverOptionsWithAgent = JSON.parse(JSON.stringify(serverOptions));
+            var customAgent = new http.Agent();
+            var customAgentCalled = false;
+            customAgent.addRequest = function(req, host, port, localAddress) {
+                customAgentCalled = true;
+                return http.Agent.prototype.addRequest.call(this, req, host, port, localAddress);
+            };
+            serverOptionsWithAgent.agent = customAgent;
+            var elasticSearchClient = new ElasticSearchClient(serverOptionsWithAgent);
+            elasticSearchClient.get(indexName, objName, "sushi")
+                .on('data', function(data) {
+                    data = JSON.parse(data);
+                    data.exists.should.exist;
+                    data._id.should.equal("sushi");
+                    data._source.should.be.ok;
+                    customAgentCalled.should.be.true;
+                    done();
+                })
+                .exec();
+        });
     });
 });
