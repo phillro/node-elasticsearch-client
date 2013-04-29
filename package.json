@@ -3,7 +3,7 @@
     "name": "elasticsearchclient",
     "description": "A client for Elastic Search",
     "keywords": ["elasticsearch", "elastic", "search", "client"],
-    "version": "0.5.1",
+    "version": "0.5.0",
     "repository": {
         "url": ""
     },
