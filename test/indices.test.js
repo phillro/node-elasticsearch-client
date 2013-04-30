@@ -132,20 +132,6 @@ describe("ElasticSearchClient indices api", function(){
     });
 
 
-    describe("#closeIndex", function(){
-        it("should close the given index", function(done){
-            elasticSearchClient.closeIndex(indexName)
-                .on('data', function(data) {
-                    data = JSON.parse(data);
-                    data.ok.should.be.ok;
-                    data.acknowledged.should.be.ok;
-                    done();
-                })
-                .exec();
-        });
-    });
-
-
     describe("#getSettings", function(){
     	it("should get settings", function(done){
             elasticSearchClient.getSettings(indexName)
@@ -361,6 +347,19 @@ describe("ElasticSearchClient indices api", function(){
     });
 
 
+    describe("#stats", function(){
+        it("should provide stats", function(done){
+            elasticSearchClient.stats(indexName)
+                .on('data', function(data) {
+                    data = JSON.parse(data);
+                    data.ok.should.be.ok;
+                    done();
+                })
+                .exec();
+        });
+    });
+
+
     describe("#clearCache", function(){
     	it("should clear the cache", function(done){
             elasticSearchClient.clearCache(indexName)
@@ -412,6 +411,20 @@ describe("ElasticSearchClient indices api", function(){
                     data = JSON.parse(data);
                     data.should.be.ok;
                     data.indices[indexName].shards.should.be.ok.not.be.empty;
+                    done();
+                })
+                .exec();
+        });
+    });
+
+
+    describe("#closeIndex", function(){
+        it("should close the given index", function(done){
+            elasticSearchClient.closeIndex(indexName)
+                .on('data', function(data) {
+                    data = JSON.parse(data);
+                    data.ok.should.be.ok;
+                    data.acknowledged.should.be.ok;
                     done();
                 })
                 .exec();
