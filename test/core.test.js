@@ -46,17 +46,39 @@ describe("ElasticSearchClient Core api", function() {
     describe("#index canonical", function() {
         it("should index a json object", function(done) {
             elasticSearchClient.index(indexName, objName, {'name': 'sushi'}, function(err, data) {
+                should.not.exist(err);
                 data = JSON.parse(data);
                 data.ok.should.be.ok;
                 done();
             });
         });
 
-        it("should index an object with given id under the same id", function(done) {
-            elasticSearchClient.index(indexName, objName, {'name': 'name', id: "9999"}, "1111", function(err, data) {
+        it("should allow options to be passed in", function(done) {
+            elasticSearchClient.index(indexName, objName, {'name': 'sushi'}, {}, function(err, data) {
+                should.not.exist(err);
                 data = JSON.parse(data);
-                data._id.should.equal("1111");
+                data.ok.should.be.ok;
                 done();
+            });
+        });
+
+        context("when an id is passed in", function() {
+            it("should index an object with given id under the same id", function(done) {
+                elasticSearchClient.index(indexName, objName, {name: 'name', id: "9999"}, "1111", function(err, data) {
+                    should.not.exist(err);
+                    data = JSON.parse(data);
+                    data._id.should.equal("1111");
+                    done();
+                });
+            });
+
+            it("should allow options to be passed in", function(done) {
+                elasticSearchClient.index(indexName, objName, {'name': 'sushi'}, "1111", {}, function(err, data) {
+                    should.not.exist(err);
+                    data = JSON.parse(data);
+                    data.ok.should.be.ok;
+                    done();
+                });
             });
         });
     });
