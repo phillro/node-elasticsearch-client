@@ -12,5 +12,8 @@ test-cov: lib-cov
 lib-cov:
 		@jscoverage lib $@
 
-.PHONY: test test-cov
+lint:
+	./node_modules/.bin/jshint ./lib --config .jshintrc && \
+	./node_modules/.bin/jshint ./test --config ./test/.jshintrc
 
+.PHONY: test test-cov
