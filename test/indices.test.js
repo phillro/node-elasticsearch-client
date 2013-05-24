@@ -11,31 +11,29 @@ var serverOptions = {
      }*/
 };
 
-
 var indexName = 'your_index_name';
 var objName = 'your_object_name';
 var testIndex = "your_test_index_name";
 
 var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
-
-var tweet = {"tweet" : {
-        "properties" : {
-            "message" : {"type" : "string", "store" : "yes"}
+var tweet = {
+    tweet: {
+        properties: {
+            message: {type: "string", store: "yes"}
         }
     }
 };
 
 var template = {
-                "template" : "te*",
-                "settings" : {
-                    "number_of_shards" : 1
-                }
-            };
+    template: "te*",
+    settings: {
+        number_of_shards : 1
+    }
+};
 
 
 describe("ElasticSearchClient indices api", function() {
-
     before(function(done) {
         elasticSearchClient.index(indexName, objName, {"id": "sushi", name: "sushi"})
             .on('data', function(data) {
@@ -131,7 +129,6 @@ describe("ElasticSearchClient indices api", function() {
         });
     });
 
-
     describe("#getSettings", function() {
     	it("should get settings", function(done) {
             elasticSearchClient.getSettings(indexName)
@@ -145,7 +142,6 @@ describe("ElasticSearchClient indices api", function() {
         });
     });
 
-
     describe("#putMapping", function() {
         var check = function(err, data, done) {
             data = JSON.parse(data);
@@ -153,12 +149,14 @@ describe("ElasticSearchClient indices api", function() {
             data.acknowledged.should.be.true;
             done(err);
         };
+
         var checkError = function(err, data, done) {
             data = JSON.parse(data);
             data.error.should.be.a('string');
             data.status.should.eql(500);
             done(err);
         };
+
         it("should put mappings one object one index", function(done) {
             elasticSearchClient.putMapping(indexName, objName, tweet)
                 .on('data', function(data) {
@@ -166,16 +164,19 @@ describe("ElasticSearchClient indices api", function() {
                 })
                 .exec();
         });
+
         it("should put mappings one object one index canonical style no options", function(done) {
             elasticSearchClient.putMapping(indexName, objName, tweet, function(err, data) {
                 check(err, data, done);
             });
         });
+
         it("should put mappings one object one index canonical style with options", function(done) {
             elasticSearchClient.putMapping(indexName, objName, tweet, {}, function(err, data) {
                 check(err, data, done);
             });
         });
+
         it("should fail to put a mapping if the typeName is unspecified", function(done) {
             elasticSearchClient.putMapping(indexName, null, { does_nothing: 'no matter'})
                 .on('data', function(data) {
@@ -183,18 +184,19 @@ describe("ElasticSearchClient indices api", function() {
                 })
                 .exec();
         });
+
         it("should fail to put a mapping if the typeName is unspecified canonical style", function(done) {
             elasticSearchClient.putMapping(indexName, null, { does_nothing: 'no matter'}, function(err, data) {
                 checkError(null, data, done);
             });
         });
+
         it("should fail to put a mapping if the typeName is unspecified canonical style with options", function(done) {
             elasticSearchClient.putMapping(indexName, null, { does_nothing: 'no matter'}, { pretty: true }, function(err, data) {
                 checkError(null, data, done);
             });
         });
     });
-
 
     describe("#getMapping", function() {
         var check = function(data, propertyToCheck, done) {
@@ -203,6 +205,7 @@ describe("ElasticSearchClient indices api", function() {
             data[propertyToCheck].should.exist;
             done(null, data);
         };
+
         it("should get mappings for one object in one index", function(done) {
             elasticSearchClient.getMapping(indexName, objName)
                 .on('data', function(data) {
@@ -210,6 +213,7 @@ describe("ElasticSearchClient indices api", function() {
                 })
                 .exec();
         });
+
         it("should get mappings for all objects in one index", function(done) {
             elasticSearchClient.getMapping(indexName, null)
                 .on('data', function(data) {
@@ -217,6 +221,7 @@ describe("ElasticSearchClient indices api", function() {
                 })
                 .exec();
         });
+
         it("should get mappings for all indexes", function(done) {
             elasticSearchClient.getMapping()
                 .on('data', function(data) {
@@ -224,18 +229,19 @@ describe("ElasticSearchClient indices api", function() {
                 })
                 .exec();
         });
+
         it("should get mappings for one object in one index canonical no options", function(done) {
             elasticSearchClient.getMapping(indexName, objName, function(err, data) {
-                    check(data, objName, done);
-                });
+                check(data, objName, done);
+            });
         });
+
         it("should get mappings for one object in one index canonical with options", function(done) {
             elasticSearchClient.getMapping(indexName, objName, {}, function(err, data) {
-                    check(data, objName, done);
-                });
+                check(data, objName, done);
+            });
         });
     });
-
 
     describe("#refresh", function() {
     	it("should refresh", function(done) {
@@ -248,7 +254,6 @@ describe("ElasticSearchClient indices api", function() {
                     .exec();
         });
     });
-
 
     describe("#optimize @slow", function() {
     	it("should optimize", function(done) {
@@ -263,7 +268,6 @@ describe("ElasticSearchClient indices api", function() {
         });
     });
 
-
     describe("#flush", function() {
     	it("should flush", function(done) {
             elasticSearchClient.flush(indexName)
@@ -276,7 +280,6 @@ describe("ElasticSearchClient indices api", function() {
                 .exec();
         });
     });
-
 
     describe("#snapShot", function() {
     	it("should take a snapshot", function(done) {
@@ -304,7 +307,6 @@ describe("ElasticSearchClient indices api", function() {
         });
     });
 
-
     describe("#getTemplate", function() {
         	it("should get a template", function(done) {
             elasticSearchClient.getTemplate('Template', template)
@@ -317,7 +319,6 @@ describe("ElasticSearchClient indices api", function() {
                 .exec();
         });
     });
-
 
     describe("#deleteTemplate", function() {
     	it("should delete a template", function(done) {
@@ -332,7 +333,6 @@ describe("ElasticSearchClient indices api", function() {
         });
     });
 
-
     describe("#status", function() {
     	it("should provide status", function(done) {
             elasticSearchClient.status(indexName)
@@ -346,7 +346,6 @@ describe("ElasticSearchClient indices api", function() {
         });
     });
 
-
     describe("#stats", function() {
         it("should provide stats", function(done) {
             elasticSearchClient.stats(indexName)
@@ -358,7 +357,6 @@ describe("ElasticSearchClient indices api", function() {
                 .exec();
         });
     });
-
 
     describe("#clearCache", function() {
     	it("should clear the cache", function(done) {
@@ -384,7 +382,6 @@ describe("ElasticSearchClient indices api", function() {
         });
     });
 
-
     describe("#updateSettings", function() {
         it("should update settings", function(done) {
             var settings = {
@@ -403,7 +400,6 @@ describe("ElasticSearchClient indices api", function() {
         });
     });
 
-
     describe("#getSegments", function() {
         it("should get segments", function(done) {
             elasticSearchClient.getSegments(indexName)
@@ -417,7 +413,6 @@ describe("ElasticSearchClient indices api", function() {
         });
     });
 
-
     describe("#closeIndex", function() {
         it("should close the given index", function(done) {
             elasticSearchClient.closeIndex(indexName)
@@ -430,7 +425,6 @@ describe("ElasticSearchClient indices api", function() {
                 .exec();
         });
     });
-
 
     after(function(done) {
         elasticSearchClient.deleteIndex(indexName)

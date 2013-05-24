@@ -104,6 +104,7 @@ describe("ElasticSearchClient Core api", function() {
             data.docs[0]._source.should.be.ok;
             callback(err);
         };
+
         it("should fetch the row by id via multiget event style", function(done) {
             elasticSearchClient.multiget(indexName, objName, [ "sushi" ], {})
             .on('data', function(data) {
@@ -114,11 +115,13 @@ describe("ElasticSearchClient Core api", function() {
             })
             .exec();
         });
+
         it("should fetch the row by id via multiget canonical", function(done) {
             elasticSearchClient.multiget(indexName, objName, [ "sushi" ], function(err, data) {
                 check(err, data, done);
             });
         });
+
         it("should fetch the row by doc via multiget canonical", function(done) {
             elasticSearchClient.multiget(indexName, objName, [{_id: "sushi"}], function(err, data) {
                 check(err, data, done);

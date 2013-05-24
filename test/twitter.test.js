@@ -26,7 +26,7 @@ try {
             "bulk_size": bulkSize
         }
     };
-}catch (e) {
+} catch (e) {
     console.log(e);
     console.log(" \n\
                 *****************************************************************\n   \

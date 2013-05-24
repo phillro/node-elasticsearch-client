@@ -11,9 +11,6 @@ var serverOptions = {
      }*/
 };
 
-
-
-
 var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
 describe("ElasticSearchClient Cluster apis", function() {
@@ -28,7 +25,6 @@ describe("ElasticSearchClient Cluster apis", function() {
                 .exec();
         });
     });
-
 
     describe("#state", function() {
         it("should test state", function(done) {
@@ -82,5 +78,4 @@ describe("ElasticSearchClient Cluster apis", function() {
                 .exec();
         });
     });
-
 });
