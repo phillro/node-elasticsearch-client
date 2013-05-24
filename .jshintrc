@@ -37,7 +37,6 @@
 
 
     // EcmaScript 5.
-    "es5"           : true,   // Allow EcmaScript 5 syntax.
     "strict"        : false,  // Require `use strict` pragma in every file.
     "globalstrict"  : false,  // Allow global "use strict" (also enables 'strict').
 
@@ -74,8 +73,8 @@
     "onevar"        : false,  // Allow only one `var` statement per function.
     "plusplus"      : false,  // Prohibit use of `++` & `--`.
     "sub"           : true,   // Tolerate all forms of subscript notation besides dot notation e.g. `dict['key']` instead of `dict.key`.
-    "trailing"      : true,   // Prohibit trailing whitespaces. (only works if white is 'true')
-    "white"         : true,   // Check against strict whitespace and indentation rules.
+    "trailing"      : false,   // Prohibit trailing whitespaces. (only works if white is 'true')
+    "white"         : false,   // Check against strict whitespace and indentation rules.
     "indent"        : 4,      // Enforce consistent indenting.
     "unused"        : true
 }
