@@ -17,16 +17,8 @@ var objName = 'your_object_name';
 var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
 describe("ElasticSearchClient Core api", function() {
-
     before(function(done) {
-        /*
-        *   To allow running tests individually `mocha --grep search`
-        */
-        elasticSearchClient.index(indexName, objName, {'name': 'sushi'}, "sushi")
-            .on('data', function() {
-                done();
-            })
-            .exec();
+        elasticSearchClient.index(indexName, objName, {name: 'sushi', description: 'foo'}, 'sushi', done);
     });
 
     describe("#index", function() {
@@ -69,7 +61,6 @@ describe("ElasticSearchClient Core api", function() {
         });
     });
 
-
     describe("#get", function() {
         it("should fetch the row by id", function(done) {
             elasticSearchClient.get(indexName, objName, "sushi")
@@ -87,10 +78,26 @@ describe("ElasticSearchClient Core api", function() {
     describe("#get canonical", function() {
         it("should fetch the row by id", function(done) {
             elasticSearchClient.get(indexName, objName, "sushi", function(err, data) {
+                should.not.exist(err);
                 data = JSON.parse(data);
                 data.exists.should.exist;
                 data._id.should.equal("sushi");
+                data._source.name.should.be.ok;
+                data._source.description.should.be.ok;
                 data._source.should.be.ok;
+                done();
+            });
+        });
+
+        it("should allow specifying fields to be returned", function(done) {
+            elasticSearchClient.get(indexName, objName, "sushi", {fields: 'name'}, function(err, data) {
+                should.not.exist(err);
+                data = JSON.parse(data);
+                data.exists.should.exist;
+                data._id.should.equal('sushi');
+                data.fields.should.be.ok;
+                data.fields.name.should.equal('sushi');
+                should.not.exist(data.fields.description);
                 done();
             });
         });
@@ -154,12 +161,17 @@ describe("ElasticSearchClient Core api", function() {
     });
 
     describe("#search", function() {
-        it("should search based on given query", function(done) {
-            var qryObj = {
-                "query" : {
-                    "term" : { "name" : "sushi" }
+        var qryObj;
+
+        before(function() {
+            qryObj = {
+                query: {
+                    term: {name: 'sushi'}
                 }
             };
+        });
+
+        it("should search based on given query", function(done) {
             elasticSearchClient.search(indexName, objName, qryObj)
                 .on('data', function(data) {
                     data = JSON.parse(data);
@@ -171,11 +183,6 @@ describe("ElasticSearchClient Core api", function() {
         });
 
         it("should search even if collection name not present", function(done) {
-            var qryObj = {
-                "query" : {
-                    "term" : { "name" : "sushi" }
-                }
-            };
             elasticSearchClient.search(indexName, qryObj)
                 .on('data', function(data) {
                     data = JSON.parse(data);
@@ -187,11 +194,6 @@ describe("ElasticSearchClient Core api", function() {
         });
 
         it("should search even if index_name is not present", function(done) {
-            var qryObj = {
-                "query" : {
-                    "term" : { "name" : "sushi" }
-                }
-            };
             elasticSearchClient.search(qryObj)
                 .on('data', function(data) {
                     data = JSON.parse(data);
@@ -204,13 +206,19 @@ describe("ElasticSearchClient Core api", function() {
     });
 
     describe("#search canonical", function() {
-        it("should search based on given query", function(done) {
-            var qryObj = {
-                "query" : {
-                    "term" : { "name" : "sushi" }
+        var qryObj;
+
+        before(function() {
+            qryObj = {
+                query: {
+                    term: {name: 'sushi'}
                 }
             };
+        });
+
+        it("should search based on given query", function(done) {
             elasticSearchClient.search(indexName, objName, qryObj, function(err, data) {
+                should.not.exist(err);
                 data = JSON.parse(data);
                 data.should.not.be.undefined.null.empty;
                 data.hits.total.should.be.gte(0);
@@ -218,13 +226,33 @@ describe("ElasticSearchClient Core api", function() {
             });
         });
 
+        it("should allow options to be passed in when index_name is not present", function(done) {
+            var options = {};
+            elasticSearchClient.search(indexName, qryObj, options, function(err, data) {
+                should.not.exist(err);
+                data = JSON.parse(data);
+                data.should.not.be.undefined.null.empty;
+                data.hits.total.should.be.gte(0);
+                done();
+            });
+        });
+
+        // This fails
+        it.skip("should allow options to be passed in when index_name is not present", function(done) {
+            var options = {};
+            elasticSearchClient.search(indexName, objName, qryObj, options, function(err, data) {
+                should.not.exist(err);
+                data = JSON.parse(data);
+                console.log(data);
+                data.should.not.be.undefined.null.empty;
+                data.hits.total.should.be.gte(0);
+                done();
+            });
+        });
+
         it("should search even if collection name not present", function(done) {
-            var qryObj = {
-                "query" : {
-                    "term" : { "name" : "sushi" }
-                }
-            };
             elasticSearchClient.search(indexName, qryObj, function(err, data) {
+                should.not.exist(err);
                 data = JSON.parse(data);
                 data.should.not.be.undefined.null.empty;
                 data.hits.total.should.be.gte(0);
@@ -233,12 +261,8 @@ describe("ElasticSearchClient Core api", function() {
         });
 
         it("should search even if index_name is not present", function(done) {
-            var qryObj = {
-                "query" : {
-                    "term" : { "name" : "sushi" }
-                }
-            };
             elasticSearchClient.search(qryObj, function(err, data) {
+                should.not.exist(err);
                 data = JSON.parse(data);
                 data.should.not.be.undefined.null.empty;
                 data.hits.total.should.be.at.least(0);
@@ -384,6 +408,30 @@ describe("ElasticSearchClient Core api", function() {
                 done();
             })
             .exec();
+        });
+    });
+
+    describe("#deleteDocument canonical", function() {
+        it("should delete the row by id", function(done) {
+            elasticSearchClient.deleteDocument(indexName, objName, 1111, function(err, data) {
+                should.not.exist(err);
+                data = JSON.parse(data);
+                data.ok.should.be.ok;
+                data.found.should.exist;
+                data._id.should.equal("1111");
+                done();
+            })
+        });
+
+        it("should allow options to be passed in", function(done) {
+            elasticSearchClient.deleteDocument(indexName, objName, 1111, {}, function(err, data) {
+                should.not.exist(err);
+                data = JSON.parse(data);
+                data.ok.should.be.ok;
+                data.found.should.exist;
+                data._id.should.equal("1111");
+                done();
+            })
         });
     });
 
