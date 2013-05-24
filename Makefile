@@ -2,7 +2,7 @@ BASE = .
 
 ISTANBUL = ./node_modules/.bin/istanbul
 TEST_COMMAND = NODE_ENV=test ./node_modules/.bin/mocha
-COVERAGE_OPTS = --lines 95 --statements 90 --branches 80 --functions 90
+COVERAGE_OPTS = --lines 65 --statements 65 --branches 57 --functions 79
 
 main: lint test
 
