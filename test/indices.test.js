@@ -102,6 +102,30 @@ describe("ElasticSearchClient indices api", function(){
                 })
                 .exec();
         });
+
+        it("should get global aliases", function(done){
+            elasticSearchClient.getAliases()
+                .on('data', function(data) {
+                    data = JSON.parse(data);
+                    data.should.be.ok;
+                    data.should.not.have.error;
+                    done();
+                })
+                .exec();
+        });
+
+        it("should get index aliases", function(done){
+            elasticSearchClient.getAliases(indexName)
+                .on('data', function(data) {
+                    data = JSON.parse(data);
+                    data.should.be.ok;
+                    data.should.not.have.error;
+                    data[indexName].aliases.should.be.ok;
+                    done();
+                })
+                .exec();
+        });
+
     });
 
 
@@ -109,7 +133,7 @@ describe("ElasticSearchClient indices api", function(){
         it("should analyze", function(done){
             elasticSearchClient.analyze(indexName,'this is a ')
                 .on('data', function(data) {
-                    console.log(data)
+                    // console.log(data)
                     data = JSON.parse(data);
                     data.should.be.ok;
                     done();
@@ -130,7 +154,6 @@ describe("ElasticSearchClient indices api", function(){
                 .exec();
         });
     });
-
 
     describe("#getSettings", function(){
     	it("should get settings", function(done){
