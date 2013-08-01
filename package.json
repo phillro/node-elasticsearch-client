@@ -1,0 +1,43 @@
+{
+  "author": {
+    "name": "Phillip Rosen",
+    "email": "phill.rosen@gmail.com"
+  },
+  "name": "elasticsearchclient",
+  "description": "A client for Elastic Search",
+  "keywords": [
+    "elasticsearch",
+    "elastic",
+    "search",
+    "client"
+  ],
+  "version": "0.5.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/phillro/node-elasticsearch-client.git"
+  },
+  "main": "./index.js",
+  "engines": {
+    "node": ">= 0.3.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "1.7.4",
+    "chai": "*"
+  },
+  "scripts": {
+    "test": "make test",
+    "coverage": "make test-cov --no-print-directory"
+  },
+  "readme": "[![build status](https://secure.travis-ci.org/phillro/node-elasticsearch-client.png)](http://travis-ci.org/phillro/node-elasticsearch-client)\nElastic Search Client\n=====================\n\nA node.js client for elasticsearch (http://www.elasticsearch.com). \n\n## Installation\n\n```\nnpm install elasticsearchclient\n```\n\n## Executing commands on elasticsearch\n\n```javascript\nElasticSearchClient = require('elasticsearchclient');\n\nvar serverOptions = {\n    host: 'localhost',\n    port: 9200,\n    pathPrefix:'optional pathPrefix',\n    secure: true||false,\n    //Optional basic HTTP Auth\n    auth: {\n   \tusername: process.env.ES_USERNAME,\n    \tpassword: process.env.ES_PASSWORD\n  }\n};\n\n\n\n```\n\n\nOR specify multiple hosts\n\n```javascript\nvar serverOptions = {\n    hosts:[\n        {\n            host: 'localhost',\n            port: 9200\n        }]\n};\n```\n\n```javascript\nvar elasticSearchClient = new ElasticSearchClient(serverOptions);\n\nvar qryObj = {\n    field : term\n}\n\nelasticSearchClient.search('my_index_name', 'my_type_name', qryObj)\n    .on('data', function(data) {\n        console.log(JSON.parse(data))\n    })\n    .on('done', function(){\n        //always returns 0 right now\n    })\n    .on('error', function(error){\n        console.log(error)\n    })\n    .exec()\n\n//Canonical search\n elasticSearchClient.search('my_index_name', 'my_type_name', qryObj, function(err, data){\n    console.log(JSON.parse(data))\n })\n\n//Search call as a reusable object with a canonical callback\nmySearchCall = elasticSearchClient.search('my_index_name', 'my_type_name', qryObj);\n//Do it once\nmySearchCall.exec(function(err, data){\n    console.log(JSON.parse(data))\n})\n//Do it twice\nmySearchCall.exec(function(err, data){\n    console.log(JSON.parse(data))\n})\n\n\n\nelasticSearchClient.index(indexName, typeName, document, id, options)\n    .on('data', function(data) {\n        console.log(data)\n    })\n    .exec()\n\n//Bulk index example\nvar commands = []\ncommands.push({ \"index\" : { \"_index\" :'my_index_name', \"_type\" : \"my_type_name\"} })\ncommands.push({field1:'value',field2:'value'})\n\n\n    elasticSearchClient.bulk(commands, {})\n            .on('data', function(data) {})\n            .on('done', function(done){})\n            .on('error', function(error){})\n            .exec();\n\n```\n\nTwitter stream:\nSeems to be a problem in the es with deleting streams. May require a node restart for modifications/deletes to take effect\n\n\n```javascript\nelasticSearchClient.createOrModifyTwitterRiver(riverName, riverData)\n    .on('data', function (data) {\n        console.log(data)\n        assert.ok(JSON.parse(data).ok)\n    })\n    .on('error',\n    function (error) {\n        console.log(error)\n        assert.ok(false)\n    }).exec()\n```\n## Code coverage\n\nRun code coverage by executing:\n\n\t$npm run-script coverage\n\n*Requires [visionmedia/jscoverage](https://github.com/visionmedia/node-jscoverage)\n\n## What can i do?\n\nMost of the API (http://www.elasticsearch.org/guide/reference/api/) is implemented. \n\n## License\n\nCopyright (c) 2011 Phillip Rosen\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n'Software'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/phillro/node-elasticsearch-client/issues"
+  },
+  "_id": "elasticsearchclient@0.5.1",
+  "dist": {
+    "shasum": "82bf9f56e3c0d666cc62b3f1e9a0f686679cc0f3"
+  },
+  "_resolved": "git://github.com/giddyinc/node-elasticsearch-client.git#300f1d0d7cd9ca19c7431e2bff219cda9ed5b6c2",
+  "_from": "elasticsearchclient@git://github.com/giddyinc/node-elasticsearch-client.git"
+}
