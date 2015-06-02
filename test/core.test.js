@@ -421,4 +421,18 @@ describe("ElasticSearchClient Core api", function(){
                 .exec();
         });
     });
+
+    describe('#automatically parse JSON', function() {
+        it('should automatically parse the JSON response into an object', function(done) {
+            var serverOptionsWithParseJSON = JSON.parse(JSON.stringify(serverOptions));
+            serverOptionsWithParseJSON.parseJSON = true;
+            var elasticSearchClient = new ElasticSearchClient(serverOptionsWithParseJSON;
+            elasticSearchClient.get(indexName, objName, "sushi")
+                .on('data', function(data) {
+                    data.should.be.an('object');
+                    done();
+                })
+                .exec();
+        });
+    });
 });

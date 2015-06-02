@@ -22,6 +22,7 @@ var serverOptions = {
     host: 'localhost',
     port: 9200,
     pathPrefix:'optional pathPrefix',
+    parseJSON: true||false,//default false
     secure: true||false,
     //Optional basic HTTP Auth
     auth: {
@@ -56,7 +57,7 @@ var qryObj = {
 
 elasticSearchClient.search('my_index_name', 'my_type_name', qryObj)
     .on('data', function(data) {
-        console.log(JSON.parse(data))
+        console.log(JSON.parse(data)) //Necessary if parseJSON is false
     })
     .on('done', function(){
         //always returns 0 right now
